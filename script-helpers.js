@@ -38,7 +38,7 @@ var runCommandInDirsAsync = (command, dirs) => {
 var getDirsContainingFile = (filename) => {
   console.log(consoleColor.fgCyan, `searching for ${filename}...`, consoleColor.reset);
 
-  var find = shell.exec(`find -name '${filename}'`, { silent: true });
+  var find = shell.exec(`find ./ -name '${filename}'`, { silent: true });
   if (find.code !== 0) {
     find = shell.exec(`dir ${filename} /b/s`, { silent: true });
   }
