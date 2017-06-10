@@ -35,7 +35,7 @@ var runCommandInDirsAsync = (command, dirs) => {
   });
 }
 
-var getDirsContainingFile = (filename) => {
+var getDirsContainingFile = (filename, exclusions = []) => {
   console.log(consoleColor.fgCyan, `searching for ${filename}...`, consoleColor.reset);
 
   var find = shell.exec(`find ./ -name '${filename}'`, { silent: true });
@@ -46,8 +46,11 @@ var getDirsContainingFile = (filename) => {
   var dirs =
     find.stdout
       .split(/\r\n?|\n/)
-      .filter(dir => !dir.includes('node_modules') && dir)
-      .map(file => file.replace(filename, ''));
+      .filter(dir => dir);
+  if(exclusions.length > 0) {
+    dirs = dirs.filter(dir => !new RegExp(exclusions.join("|")).test(`/${dir}/`))
+  }
+  dirs = dirs.map(file => file.replace(filename, ''));     
 
   console.log(consoleColor.fgCyan, `${filename} found in: `);
   console.log(consoleColor.fgGreen);
